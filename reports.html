@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Reports - BugHunter</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-shield-alt"></i>
+                    BugHunter
+                </a>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="programs.html" class="nav-link">Programs</a>
+                <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+                <a href="reports.html" class="nav-link active">Reports</a>
+                <div class="nav-auth">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="register.html" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Reports Header -->
+    <section class="reports-header">
+        <div class="container">
+            <div class="header-content">
+                <h1>Security Reports</h1>
+                <p>Comprehensive vulnerability assessments and penetration testing reports</p>
+                
+                <div class="report-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">1,247</div>
+                        <div class="stat-label">Total Reports</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">89</div>
+                        <div class="stat-label">Critical Vulnerabilities</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">324</div>
+                        <div class="stat-label">High Priority</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Resolution Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Filters -->
+    <section class="reports-filters">
+        <div class="container">
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="severity-filter">Severity</label>
+                    <select id="severity-filter" onchange="filterReports()">
+                        <option value="">All Severities</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                        <option value="info">Informational</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="type-filter">Test Type</label>
+                    <select id="type-filter" onchange="filterReports()">
+                        <option value="">All Types</option>
+                        <option value="web-app">Web Application</option>
+                        <option value="api">API Security</option>
+                        <option value="network">Network Infrastructure</option>
+                        <option value="mobile">Mobile Application</option>
+                        <option value="cloud">Cloud Security</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="status-filter">Status</label>
+                    <select id="status-filter" onchange="filterReports()">
+                        <option value="">All Status</option>
+                        <option value="new">New</option>
+                        <option value="acknowledged">Acknowledged</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="fixed">Fixed</option>
+                        <option value="wont-fix">Won't Fix</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <input type="text" id="search-filter" placeholder="Search reports..." onkeyup="filterReports()">
+                </div>
+                
+                <button class="btn btn-primary" onclick="generateReport()">
+                    <i class="fas fa-plus"></i>
+                    Generate Report
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reports Grid -->
+    <section class="reports-content">
+        <div class="container">
+            <div class="reports-grid" id="reports-grid">
+                <!-- Reports will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Details Modal -->
+    <div id="report-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <button class="close-btn" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Report details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Include external script file -->
+    <script>
+        // Initialize page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure all required functions exist
+            initializeFallbackFunctions();
+            loadReports();
+        });
+
+        function initializeFallbackFunctions() {
+            // Fallback API object if external script fails
+            if (typeof window.API === 'undefined') {
+                window.API = {
+                    request: function(url, options) {
+                        return new Promise((resolve) => {
+                            console.log('API request:', url);
+                            setTimeout(() => {
+                                resolve({ success: true, data: {} });
+                            }, 500);
+                        });
+                    }
+                };
+            }
+
+            // Fallback utility functions
+            if (typeof window.showError === 'undefined') {
+                window.showError = function(element, message) {
+                    console.error('Error:', message);
+                    if (element && element.style) {
+                        element.style.borderColor = '#ef4444';
+                    }
+                };
+            }
+
+            if (typeof window.showLoading === 'undefined') {
+                window.showLoading = function(button) {
+                    if (!button) return function() {};
+                    const originalText = button.textContent || button.innerHTML;
+                    button.textContent = 'Loading...';
+                    button.disabled = true;
+                    return function() {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    };
+                };
+            }
+
+            if (typeof window.showNotification === 'undefined') {
+                window.showNotification = function(message, type) {
+                    // Create a simple notification
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 1rem 1.5rem;
+                        border-radius: 8px;
+                        color: white;
+                        font-weight: 600;
+                        z-index: 10000;
+                        max-width: 400px;
+                        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                    `;
+                    notification.textContent = message;
+                    
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 5000);
+                };
+            }
+
+            if (typeof window.validateForm === 'undefined') {
+                window.validateForm = function(form) {
+                    if (!form) return true;
+                    const inputs = form.querySelectorAll('input[required], select[required]');
+                    let isValid = true;
+                    inputs.forEach(input => {
+                        if (!input.value || !input.value.trim()) {
+                            if (input.style) {
+                                input.style.borderColor = '#ef4444';
+                            }
+                            isValid = false;
+                        } else if (input.style) {
+                            input.style.borderColor = '';
+                        }
+                    });
+                    return isValid;
+                };
+            }
+        }
+
+        // Sample report data
+        const reportsData = [
+            {
+                id: 1,
+                title: "SQL Injection in User Authentication",
+                severity: "critical",
+                type: "web-app",
+                status: "new",
+                company: "TechCorp Inc.",
+                researcher: "Alice Security",
+                date: "2024-01-15",
+                cvss: 9.1,
+                description: "Critical SQL injection vulnerability discovered in the user authentication system allowing complete database compromise.",
+                impact: "Complete database access, user data exposure, potential system takeover",
+                recommendation: "Implement parameterized queries and input validation",
+                poc: "POST /login\\nusername=admin' OR '1'='1'--&password=anything"
+            },
+            {
+                id: 2,
+                title: "Cross-Site Scripting (XSS) in Comment System",
+                severity: "high",
+                type: "web-app",
+                status: "acknowledged",
+                company: "StartupXYZ",
+                researcher: "Bob Hacker",
+                date: "2024-01-14",
+                cvss: 7.5,
+                description: "Stored XSS vulnerability in the comment system allowing malicious script execution.",
+                impact: "Session hijacking, credential theft, malicious redirects",
+                recommendation: "Implement proper input sanitization and output encoding",
+                poc: "&lt;script&gt;alert('XSS')&lt;/script&gt;"
+            },
+            {
+                id: 3,
+                title: "API Rate Limiting Bypass",
+                severity: "medium",
+                type: "api",
+                status: "in-progress",
+                company: "ApiCompany Ltd",
+                researcher: "Charlie Pentest",
+                date: "2024-01-13",
+                cvss: 5.3,
+                description: "API rate limiting can be bypassed using different header combinations.",
+                impact: "Potential DoS attacks, resource exhaustion",
+                recommendation: "Implement proper rate limiting based on multiple factors",
+                poc: "curl -H 'X-Forwarded-For: 1.2.3.4' -H 'X-Real-IP: 5.6.7.8' /api/endpoint"
+            },
+            {
+                id: 4,
+                title: "Insecure Direct Object Reference",
+                severity: "high",
+                type: "web-app",
+                status: "fixed",
+                company: "SecureApp Co",
+                researcher: "Diana Finder",
+                date: "2024-01-12",
+                cvss: 8.1,
+                description: "Users can access other users' data by manipulating object references.",
+                impact: "Unauthorized data access, privacy violations",
+                recommendation: "Implement proper authorization checks",
+                poc: "GET /user/profile?id=1337 (accessing other user's profile)"
+            },
+            {
+                id: 5,
+                title: "Weak SSL/TLS Configuration",
+                severity: "medium",
+                type: "network",
+                status: "acknowledged",
+                company: "NetworkTech",
+                researcher: "Eve Cipher",
+                date: "2024-01-11",
+                cvss: 4.8,
+                description: "Server supports weak SSL/TLS protocols and cipher suites.",
+                impact: "Man-in-the-middle attacks, data interception",
+                recommendation: "Update SSL/TLS configuration to use strong protocols",
+                poc: "nmap --script ssl-enum-ciphers -p 443 target.com"
+            }
+        ];
+
+        function loadReports() {
+            try {
+                renderReports(reportsData);
+            } catch (error) {
+                console.error('Error loading reports:', error);
+                const grid = document.getElementById('reports-grid');
+                if (grid) {
+                    grid.innerHTML = '<p class="no-results">Error loading reports. Please refresh the page.</p>';
+                }
+            }
+        }
+
+        function renderReports(reports) {
+            const grid = document.getElementById('reports-grid');
+            if (!grid) {
+                console.error('Reports grid element not found');
+                return;
+            }
+            
+            if (!reports || reports.length === 0) {
+                grid.innerHTML = '<p class="no-results">No reports match your criteria.</p>';
+                return;
+            }
+
+            try {
+                grid.innerHTML = reports.map(report => `
+                    <div class="report-card" onclick="showReportDetails(${report.id})">
+                        <div class="report-header">
+                            <div class="severity-badge severity-${report.severity}">${report.severity.toUpperCase()}</div>
+                            <div class="cvss-score">CVSS: ${report.cvss}</div>
+                        </div>
+                        
+                        <h3 class="report-title">${escapeHtml(report.title)}</h3>
+                        
+                        <div class="report-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-building"></i>
+                                <span>${escapeHtml(report.company)}</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-user-shield"></i>
+                                <span>${escapeHtml(report.researcher)}</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>${formatDate(report.date)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="report-description">
+                            ${escapeHtml(report.description.substring(0, 150))}...
+                        </div>
+                        
+                        <div class="report-footer">
+                            <span class="type-badge type-${report.type}">${report.type.replace('-', ' ').toUpperCase()}</span>
+                            <span class="status-badge status-${report.status}">${report.status.replace('-', ' ').toUpperCase()}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error rendering reports:', error);
+                grid.innerHTML = '<p class="no-results">Error rendering reports. Please try again.</p>';
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            try {
+                return new Date(dateString).toLocaleDateString();
+            } catch (error) {
+                return dateString;
+            }
+        }
+
+        function filterReports() {
+            try {
+                const severityFilter = document.getElementById('severity-filter')?.value || '';
+                const typeFilter = document.getElementById('type-filter')?.value || '';
+                const statusFilter = document.getElementById('status-filter')?.value || '';
+                const searchFilter = document.getElementById('search-filter')?.value?.toLowerCase() || '';
+
+                const filteredReports = reportsData.filter(report => {
+                    const severityMatch = !severityFilter || report.severity === severityFilter;
+                    const typeMatch = !typeFilter || report.type === typeFilter;
+                    const statusMatch = !statusFilter || report.status === statusFilter;
+                    const searchMatch = !searchFilter || 
+                        report.title.toLowerCase().includes(searchFilter) ||
+                        report.company.toLowerCase().includes(searchFilter) ||
+                        report.researcher.toLowerCase().includes(searchFilter);
+
+                    return severityMatch && typeMatch && statusMatch && searchMatch;
+                });
+
+                renderReports(filteredReports);
+            } catch (error) {
+                console.error('Error filtering reports:', error);
+            }
+        }
+
+        function showReportDetails(reportId) {
+            try {
+                const report = reportsData.find(r => r.id === reportId);
+                if (!report) {
+                    console.error('Report not found:', reportId);
+                    return;
+                }
+
+                const modalTitle = document.getElementById('modal-title');
+                const modalBody = document.getElementById('modal-body');
+                
+                if (!modalTitle || !modalBody) {
+                    console.error('Modal elements not found');
+                    return;
+                }
+
+                modalTitle.textContent = report.title;
+                modalBody.innerHTML = `
+                    <div class="report-details">
+                        <div class="detail-section">
+                            <h3>Summary</h3>
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <label>Severity:</label>
+                                    <span class="severity-badge severity-${report.severity}">${report.severity.toUpperCase()}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>CVSS Score:</label>
+                                    <span class="cvss-score">${report.cvss}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Type:</label>
+                                    <span>${report.type.replace('-', ' ').toUpperCase()}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Status:</label>
+                                    <span class="status-badge status-${report.status}">${report.status.replace('-', ' ').toUpperCase()}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Company:</label>
+                                    <span>${escapeHtml(report.company)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Researcher:</label>
+                                    <span>${escapeHtml(report.researcher)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h3>Description</h3>
+                            <p>${escapeHtml(report.description)}</p>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h3>Impact</h3>
+                            <p>${escapeHtml(report.impact)}</p>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h3>Recommendation</h3>
+                            <p>${escapeHtml(report.recommendation)}</p>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h3>Proof of Concept</h3>
+                            <pre class="poc-code">${escapeHtml(report.poc)}</pre>
+                        </div>
+                        
+                        <div class="detail-actions">
+                            <button class="btn btn-primary" onclick="downloadReport(${report.id})">
+                                <i class="fas fa-download"></i>
+                                Download PDF
+                            </button>
+                            <button class="btn btn-secondary" onclick="shareReport(${report.id})">
+                                <i class="fas fa-share"></i>
+                                Share Report
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                const modal = document.getElementById('report-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error showing report details:', error);
+                if (window.showNotification) {
+                    showNotification('Error loading report details', 'error');
+                }
+            }
+        }
+
+        function closeModal() {
+            try {
+                const modal = document.getElementById('report-modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error closing modal:', error);
+            }
+        }
+
+        function generateReport() {
+            if (window.showNotification) {
+                showNotification('Report generation feature coming soon! This will allow creating custom security assessment reports.', 'info');
+            } else {
+                alert('Report generation feature coming soon!');
+            }
+        }
+
+        function downloadReport(reportId) {
+            if (window.showNotification) {
+                showNotification(`Downloading report ${reportId} as PDF...`, 'info');
+            } else {
+                alert(`Downloading report ${reportId} as PDF...`);
+            }
+        }
+
+        function shareReport(reportId) {
+            if (window.showNotification) {
+                showNotification(`Sharing report ${reportId}...`, 'info');
+            } else {
+                alert(`Sharing report ${reportId}...`);
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('report-modal');
+            if (modal && e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+
+    <style>
+        /* Base CSS Variables - Define if not already defined */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --primary-color: #667eea;
+            --secondary-color: #22c55e;
+            --accent-color: #f59e0b;
+            --danger-color: #ef4444;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .reports-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .header-content p {
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .report-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .reports-filters {
+            background: var(--bg-secondary);
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .reports-content {
+            padding: 3rem 0;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .report-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .report-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .severity-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .severity-critical {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .severity-high {
+            background: #fbb6ce;
+            color: #ad1457;
+        }
+
+        .severity-medium {
+            background: #fbd38d;
+            color: #d68910;
+        }
+
+        .severity-low {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .severity-info {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        .cvss-score {
+            background: var(--bg-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .report-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .report-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-item i {
+            width: 16px;
+            color: var(--primary-color);
+        }
+
+        .report-description {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .report-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .type-badge,
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .type-badge {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .status-new {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .status-acknowledged {
+            background: #fbd38d;
+            color: #d68910;
+        }
+
+        .status-in-progress {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        .status-fixed {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .status-wont-fix {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+
+        .detail-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .detail-item label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .poc-code {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            padding: 3rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .report-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: stretch;
+            }
+
+            .detail-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

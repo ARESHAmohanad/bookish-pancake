@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bug Hunter - Authentication</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-header">
+            <h1>AI Bug Hunter</h1>
+            <p>Secure your systems with ethical hacking expertise</p>
+        </div>
+
+        <div class="auth-options">
+            <div class="option-card">
+                <h2>Ethical Hackers</h2>
+                <p>Join our community of security professionals</p>
+                <button onclick="showForm('hacker-signup')" class="btn btn-primary">Create Hacker Account</button>
+                <button onclick="showForm('login')" class="btn btn-secondary">Login</button>
+            </div>
+
+            <div class="option-card">
+                <h2>Companies</h2>
+                <p>Secure your business with penetration testing</p>
+                <button onclick="showForm('company-signup')" class="btn btn-primary">Create Company Account</button>
+                <button onclick="showForm('login')" class="btn btn-secondary">Login</button>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login" class="auth-form hidden">
+            <h2>Login</h2>
+            <form>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="button" onclick="hideForm()" class="btn btn-secondary">Back</button>
+            </form>
+        </div>
+
+        <!-- Hacker Signup Form -->
+        <div id="hacker-signup" class="auth-form hidden">
+            <h2>Create Ethical Hacker Account</h2>
+            <form>
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <input type="text" placeholder="Specialization (e.g., Web Apps, Networks)" required>
+                <textarea placeholder="Experience & Certifications" rows="3"></textarea>
+                <select required>
+                    <option value="">Experience Level</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="expert">Expert</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+                <button type="button" onclick="hideForm()" class="btn btn-secondary">Back</button>
+            </form>
+        </div>
+
+        <!-- Company Signup Form -->
+        <div id="company-signup" class="auth-form hidden">
+            <h2>Create Company Account</h2>
+            <form>
+                <input type="text" placeholder="Company Name" required>
+                <input type="email" placeholder="Business Email" required>
+                <input type="password" placeholder="Password" required>
+                <input type="text" placeholder="Contact Person" required>
+                <input type="tel" placeholder="Phone Number" required>
+                <select required>
+                    <option value="">Company Size</option>
+                    <option value="startup">Startup (1-10 employees)</option>
+                    <option value="small">Small (11-50 employees)</option>
+                    <option value="medium">Medium (51-200 employees)</option>
+                    <option value="large">Large (200+ employees)</option>
+                </select>
+                <textarea placeholder="Brief description of security testing needs" rows="3"></textarea>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+                <button type="button" onclick="hideForm()" class="btn btn-secondary">Back</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>

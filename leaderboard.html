@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - BugHunter</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-shield-alt"></i>
+                    BugHunter
+                </a>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="programs.html" class="nav-link">Programs</a>
+                <a href="leaderboard.html" class="nav-link active">Leaderboard</a>
+                <a href="reports.html" class="nav-link">Reports</a>
+                <div class="nav-auth">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="register.html" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Leaderboard Header -->
+    <section class="leaderboard-header">
+        <div class="container">
+            <div class="header-content">
+                <h1>Hall of Fame</h1>
+                <p>Celebrating the world's top ethical hackers and security champions</p>
+                
+                <div class="leaderboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number">2,847</div>
+                            <div class="stat-label">Active Researchers</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number">15,692</div>
+                            <div class="stat-label">Bugs Found</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number">$2.8M</div>
+                            <div class="stat-label">Bounties Paid</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Navigation -->
+    <section class="leaderboard-nav">
+        <div class="container">
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="showTab('researchers')">
+                    <i class="fas fa-user-shield"></i>
+                    Top Researchers
+                </button>
+                <button class="tab-btn" onclick="showTab('companies')">
+                    <i class="fas fa-building"></i>
+                    Top Companies
+                </button>
+                <button class="tab-btn" onclick="showTab('achievements')">
+                    <i class="fas fa-medal"></i>
+                    Recent Achievements
+                </button>
+                <button class="tab-btn" onclick="showTab('monthly')">
+                    <i class="fas fa-calendar-alt"></i>
+                    This Month
+                </button>
+            </div>
+            
+            <div class="filters">
+                <select id="category-filter" onchange="filterLeaderboard()">
+                    <option value="all">All Categories</option>
+                    <option value="web">Web Security</option>
+                    <option value="mobile">Mobile Security</option>
+                    <option value="api">API Security</option>
+                    <option value="network">Network Security</option>
+                    <option value="cloud">Cloud Security</option>
+                </select>
+                
+                <select id="timeframe-filter" onchange="filterLeaderboard()">
+                    <option value="all-time">All Time</option>
+                    <option value="this-year">This Year</option>
+                    <option value="this-month">This Month</option>
+                    <option value="this-week">This Week</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top 3 Podium -->
+    <section class="podium-section" id="researchers-podium">
+        <div class="container">
+            <div class="podium">
+                <div class="podium-place second">
+                    <div class="rank-badge">2</div>
+                    <div class="researcher-avatar">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Alex Chen">
+                        <div class="country-flag">🇨🇦</div>
+                    </div>
+                    <h3>Alex Chen</h3>
+                    <div class="researcher-stats">
+                        <div class="stat">
+                            <span class="value">847</span>
+                            <span class="label">Bugs</span>
+                        </div>
+                        <div class="stat">
+                            <span class="value">$284K</span>
+                            <span class="label">Earned</span>
+                        </div>
+                    </div>
+                    <div class="specialties">
+                        <span class="specialty">Web Security</span>
+                        <span class="specialty">API Testing</span>
+                    </div>
+                </div>
+                
+                <div class="podium-place first">
+                    <div class="rank-badge">1</div>
+                    <div class="crown">👑</div>
+                    <div class="researcher-avatar">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b401?w=150&h=150&fit=crop&crop=face" alt="Sarah Martinez">
+                        <div class="country-flag">🇺🇸</div>
+                    </div>
+                    <h3>Sarah Martinez</h3>
+                    <div class="researcher-stats">
+                        <div class="stat">
+                            <span class="value">1,247</span>
+                            <span class="label">Bugs</span>
+                        </div>
+                        <div class="stat">
+                            <span class="value">$456K</span>
+                            <span class="label">Earned</span>
+                        </div>
+                    </div>
+                    <div class="specialties">
+                        <span class="specialty">Mobile Security</span>
+                        <span class="specialty">Cloud Pentesting</span>
+                    </div>
+                </div>
+                
+                <div class="podium-place third">
+                    <div class="rank-badge">3</div>
+                    <div class="researcher-avatar">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Marcus Johnson">
+                        <div class="country-flag">🇬🇧</div>
+                    </div>
+                    <h3>Marcus Johnson</h3>
+                    <div class="researcher-stats">
+                        <div class="stat">
+                            <span class="value">692</span>
+                            <span class="label">Bugs</span>
+                        </div>
+                        <div class="stat">
+                            <span class="value">$198K</span>
+                            <span class="label">Earned</span>
+                        </div>
+                    </div>
+                    <div class="specialties">
+                        <span class="specialty">Network Security</span>
+                        <span class="specialty">IoT Testing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Content -->
+    <section class="leaderboard-content">
+        <div class="container">
+            <!-- Researchers Tab -->
+            <div id="researchers-tab" class="tab-content active">
+                <div class="leaderboard-table">
+                    <div class="table-header">
+                        <h2>Top Security Researchers</h2>
+                        <p>Ranked by total bugs found and impact score</p>
+                    </div>
+                    <div class="researcher-list" id="researcher-list">
+                        <!-- Researchers will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Companies Tab -->
+            <div id="companies-tab" class="tab-content">
+                <div class="leaderboard-table">
+                    <div class="table-header">
+                        <h2>Top Security Champions</h2>
+                        <p>Companies leading the way in security research</p>
+                    </div>
+                    <div class="company-list" id="company-list">
+                        <!-- Companies will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements Tab -->
+            <div id="achievements-tab" class="tab-content">
+                <div class="achievements-grid" id="achievements-grid">
+                    <!-- Achievements will be populated here -->
+                </div>
+            </div>
+
+            <!-- Monthly Tab -->
+            <div id="monthly-tab" class="tab-content">
+                <div class="monthly-stats">
+                    <div class="monthly-header">
+                        <h2>January 2024 Highlights</h2>
+                        <p>This month's top performers and breakthrough discoveries</p>
+                    </div>
+                    <div class="monthly-grid" id="monthly-grid">
+                        <!-- Monthly stats will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Sample data
+        const researchersData = [
+            { rank: 4, name: "Emma Wilson", country: "🇦🇺", bugs: 589, earned: 147000, avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face", specialties: ["XSS", "CSRF"], reputation: 4.9 },
+            { rank: 5, name: "David Kumar", country: "🇮🇳", bugs: 523, earned: 134000, avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face", specialties: ["SQL Injection", "Authentication"], reputation: 4.8 },
+            { rank: 6, name: "Lisa Zhang", country: "🇸🇬", bugs: 467, earned: 112000, avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face", specialties: ["Mobile", "Crypto"], reputation: 4.7 },
+            { rank: 7, name: "Ahmed Hassan", country: "🇪🇬", bugs: 445, earned: 98000, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face", specialties: ["Network", "OSINT"], reputation: 4.6 },
+            { rank: 8, name: "Sofia Rodriguez", country: "🇲🇽", bugs: 398, earned: 87000, avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b401?w=150&h=150&fit=crop&crop=face", specialties: ["API", "Cloud"], reputation: 4.5 }
+        ];
+
+        const companiesData = [
+            { rank: 1, name: "TechCorp Security", logo: "🏢", programs: 23, researchers: 1247, bounties: 850000, rating: 4.9 },
+            { rank: 2, name: "CloudSecure Inc", logo: "☁️", programs: 18, researchers: 892, bounties: 645000, rating: 4.8 },
+            { rank: 3, name: "CyberSafe Solutions", logo: "🔒", programs: 15, researchers: 734, bounties: 523000, rating: 4.7 },
+            { rank: 4, name: "SecureNet Ltd", logo: "🛡️", programs: 12, researchers: 567, bounties: 398000, rating: 4.6 },
+            { rank: 5, name: "DataGuard Corp", logo: "🔐", programs: 9, researchers: 445, bounties: 287000, rating: 4.5 }
+        ];
+
+        const achievementsData = [
+            { type: "milestone", user: "Sarah Martinez", description: "Reached 1,000 validated vulnerabilities", date: "2024-01-15", icon: "🏆" },
+            { type: "discovery", user: "Alex Chen", description: "Found critical zero-day in major CMS", date: "2024-01-14", icon: "🔍" },
+            { type: "bounty", user: "Marcus Johnson", description: "Earned $50,000 bounty for RCE discovery", date: "2024-01-13", icon: "💰" },
+            { type: "certification", user: "Emma Wilson", description: "Achieved OSCP certification", date: "2024-01-12", icon: "📜" },
+            { type: "collaboration", user: "David Kumar", description: "Led successful coordinated disclosure", date: "2024-01-11", icon: "🤝" }
+        ];
+
+        function loadLeaderboard() {
+            renderResearchers();
+            renderCompanies();
+            renderAchievements();
+            renderMonthlyStats();
+        }
+
+        function renderResearchers() {
+            const container = document.getElementById('researcher-list');
+            container.innerHTML = researchersData.map(researcher => `
+                <div class="researcher-card">
+                    <div class="rank-number">#${researcher.rank}</div>
+                    <div class="researcher-info">
+                        <div class="avatar-container">
+                            <img src="${researcher.avatar}" alt="${researcher.name}" class="researcher-avatar-small">
+                            <span class="country-flag-small">${researcher.country}</span>
+                        </div>
+                        <div class="info-content">
+                            <h3>${researcher.name}</h3>
+                            <div class="reputation">
+                                <span class="stars">${'★'.repeat(Math.floor(researcher.reputation))}${'☆'.repeat(5-Math.floor(researcher.reputation))}</span>
+                                <span class="rating">${researcher.reputation}</span>
+                            </div>
+                            <div class="specialties-small">
+                                ${researcher.specialties.map(spec => `<span class="specialty-tag">${spec}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="researcher-metrics">
+                        <div class="metric">
+                            <div class="metric-value">${researcher.bugs}</div>
+                            <div class="metric-label">Bugs Found</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">$${(researcher.earned/1000).toFixed(0)}K</div>
+                            <div class="metric-label">Total Earned</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${Math.floor(researcher.earned/researcher.bugs)}</div>
+                            <div class="metric-label">Avg Bounty</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCompanies() {
+            const container = document.getElementById('company-list');
+            container.innerHTML = companiesData.map(company => `
+                <div class="company-card">
+                    <div class="rank-number">#${company.rank}</div>
+                    <div class="company-info">
+                        <div class="company-logo">${company.logo}</div>
+                        <div class="info-content">
+                            <h3>${company.name}</h3>
+                            <div class="company-rating">
+                                <span class="stars">${'★'.repeat(Math.floor(company.rating))}${'☆'.repeat(5-Math.floor(company.rating))}</span>
+                                <span class="rating">${company.rating}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="company-metrics">
+                        <div class="metric">
+                            <div class="metric-value">${company.programs}</div>
+                            <div class="metric-label">Active Programs</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${company.researchers}</div>
+                            <div class="metric-label">Researchers</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">$${(company.bounties/1000).toFixed(0)}K</div>
+                            <div class="metric-label">Bounties Paid</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievements-grid');
+            container.innerHTML = achievementsData.map(achievement => `
+                <div class="achievement-card">
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <div class="achievement-content">
+                        <div class="achievement-type">${achievement.type.toUpperCase()}</div>
+                        <h3>${achievement.user}</h3>
+                        <p>${achievement.description}</p>
+                        <div class="achievement-date">${new Date(achievement.date).toLocaleDateString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMonthlyStats() {
+            const container = document.getElementById('monthly-grid');
+            container.innerHTML = `
+                <div class="monthly-card">
+                    <div class="monthly-icon">🚀</div>
+                    <h3>Rising Star</h3>
+                    <p>Emma Wilson</p>
+                    <div class="monthly-stat">+150 bugs this month</div>
+                </div>
+                <div class="monthly-card">
+                    <div class="monthly-icon">💎</div>
+                    <h3>Highest Bounty</h3>
+                    <p>Critical RCE Discovery</p>
+                    <div class="monthly-stat">$75,000 reward</div>
+                </div>
+                <div class="monthly-card">
+                    <div class="monthly-icon">🔥</div>
+                    <h3>Most Active</h3>
+                    <p>TechCorp Security</p>
+                    <div class="monthly-stat">5 new programs launched</div>
+                </div>
+                <div class="monthly-card">
+                    <div class="monthly-icon">🌟</div>
+                    <h3>Community Choice</h3>
+                    <p>Best Disclosure Report</p>
+                    <div class="monthly-stat">Alex Chen - API Gateway Bypass</div>
+                </div>
+            `;
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            // Show/hide podium based on tab
+            const podium = document.getElementById('researchers-podium');
+            if (tabName === 'researchers') {
+                podium.style.display = 'block';
+            } else {
+                podium.style.display = 'none';
+            }
+        }
+
+        function filterLeaderboard() {
+            // Implementation for filtering would go here
+            console.log('Filtering leaderboard...');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLeaderboard();
+        });
+    </script>
+
+    <style>
+        .leaderboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .header-content p {
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .leaderboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .leaderboard-nav {
+            background: var(--bg-secondary);
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filters select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .podium-section {
+            padding: 4rem 0;
+            background: var(--bg-secondary);
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: end;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .podium-place {
+            text-align: center;
+            position: relative;
+        }
+
+        .podium-place.first {
+            order: 2;
+            transform: scale(1.1);
+        }
+
+        .podium-place.second {
+            order: 1;
+        }
+
+        .podium-place.third {
+            order: 3;
+        }
+
+        .rank-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            z-index: 2;
+        }
+
+        .crown {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .researcher-avatar {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--primary-color);
+        }
+
+        .researcher-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .country-flag {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .podium-place h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .researcher-stats {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .researcher-stats .stat {
+            text-align: center;
+        }
+
+        .researcher-stats .value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .researcher-stats .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .specialties {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .specialty {
+            background: var(--bg-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .leaderboard-content {
+            padding: 3rem 0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .table-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .table-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .table-header p {
+            color: var(--text-secondary);
+        }
+
+        .researcher-card,
+        .company-card {
+            display: flex;
+            align-items: center;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .researcher-card:hover,
+        .company-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .rank-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-right: 2rem;
+            min-width: 60px;
+        }
+
+        .researcher-info,
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .avatar-container {
+            position: relative;
+        }
+
+        .researcher-avatar-small {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .country-flag-small {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            font-size: 1rem;
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .info-content h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .reputation,
+        .company-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stars {
+            color: #ffd700;
+        }
+
+        .rating {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .specialties-small {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+
+        .specialty-tag {
+            background: var(--bg-secondary);
+            padding: 0.125rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+
+        .researcher-metrics,
+        .company-metrics {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .achievement-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-type {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-content h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .achievement-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .achievement-date {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .monthly-stats {
+            text-align: center;
+        }
+
+        .monthly-header {
+            margin-bottom: 3rem;
+        }
+
+        .monthly-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .monthly-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .monthly-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .monthly-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .monthly-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .monthly-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .monthly-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .monthly-stat {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .podium {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .podium-place {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .podium-place.first {
+                order: 1;
+                transform: none;
+            }
+
+            .researcher-metrics,
+            .company-metrics {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

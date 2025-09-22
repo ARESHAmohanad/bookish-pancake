@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard - AI Bug Hunter</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Company Dashboard</h1>
+            <div class="user-info">
+                <span id="company-name">Company Name</span>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+        </header>
+
+        <nav class="dashboard-nav">
+            <button onclick="showSection('targets')" class="nav-btn active">Target Systems</button>
+            <button onclick="showSection('tests')" class="nav-btn">Active Tests</button>
+            <button onclick="showSection('reports')" class="nav-btn">Reports</button>
+        </nav>
+
+        <!-- Target Systems Section -->
+        <section id="targets" class="dashboard-section">
+            <div class="section-header">
+                <h2>Target Systems</h2>
+                <button onclick="showAddTargetForm()" class="btn btn-primary">Add Target System</button>
+            </div>
+
+            <div id="add-target-form" class="form-modal hidden">
+                <div class="modal-content">
+                    <h3>Add Target System</h3>
+                    <form id="target-form">
+                        <input type="text" name="systemName" placeholder="System Name" required>
+                        <input type="url" name="targetUrl" placeholder="Target URL/IP" required>
+                        <select name="systemType" required>
+                            <option value="">System Type</option>
+                            <option value="web-app">Web Application</option>
+                            <option value="api">API</option>
+                            <option value="network">Network Infrastructure</option>
+                            <option value="mobile">Mobile Application</option>
+                        </select>
+                        <select name="priority" required>
+                            <option value="">Priority Level</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                        <textarea name="description" placeholder="System description and testing scope" rows="3"></textarea>
+                        <textarea name="restrictions" placeholder="Testing restrictions and guidelines" rows="2"></textarea>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Add Target</button>
+                            <button type="button" onclick="hideAddTargetForm()" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="targets-grid" id="targets-list">
+                <!-- Targets will be populated here -->
+            </div>
+        </section>
+
+        <!-- Active Tests Section -->
+        <section id="tests" class="dashboard-section hidden">
+            <h2>Active Penetration Tests</h2>
+            <div class="tests-list" id="active-tests">
+                <!-- Active tests will be populated here -->
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports" class="dashboard-section hidden">
+            <h2>Security Reports</h2>
+            <div class="reports-list" id="reports-list">
+                <!-- Reports will be populated here -->
+            </div>
+        </section>
+    </div>
+
+    <script src="company-dashboard.js"></script>
+</body>
+</html>

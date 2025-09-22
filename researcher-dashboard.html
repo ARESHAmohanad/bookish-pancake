@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Researcher Dashboard - AI Bug Hunter</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Researcher Dashboard</h1>
+            <div class="user-info">
+                <span id="researcher-name">Researcher Name</span>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+        </header>
+
+        <nav class="dashboard-nav">
+            <button onclick="showSection('available')" class="nav-btn active">Available Targets</button>
+            <button onclick="showSection('my-tests')" class="nav-btn">My Tests</button>
+            <button onclick="showSection('tools')" class="nav-btn">Testing Tools</button>
+        </nav>
+
+        <!-- Available Targets Section -->
+        <section id="available" class="dashboard-section">
+            <div class="section-header">
+                <h2>Available Testing Targets</h2>
+                <div class="filters">
+                    <select id="type-filter" onchange="filterTargets()">
+                        <option value="">All Types</option>
+                        <option value="web-app">Web Application</option>
+                        <option value="api">API</option>
+                        <option value="network">Network Infrastructure</option>
+                        <option value="mobile">Mobile Application</option>
+                    </select>
+                    <select id="priority-filter" onchange="filterTargets()">
+                        <option value="">All Priorities</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="targets-grid" id="available-targets">
+                <!-- Available targets will be populated here -->
+            </div>
+        </section>
+
+        <!-- My Tests Section -->
+        <section id="my-tests" class="dashboard-section hidden">
+            <h2>My Active Tests</h2>
+            <div class="tests-list" id="researcher-tests">
+                <!-- Researcher's tests will be populated here -->
+            </div>
+        </section>
+
+        <!-- Testing Tools Section -->
+        <section id="tools" class="dashboard-section hidden">
+            <h2>Testing Tools & Resources</h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>Vulnerability Scanner</h3>
+                    <p>Automated vulnerability detection</p>
+                    <button class="btn btn-primary">Launch Tool</button>
+                </div>
+                <div class="tool-card">
+                    <h3>Port Scanner</h3>
+                    <p>Network port discovery and analysis</p>
+                    <button class="btn btn-primary">Launch Tool</button>
+                </div>
+                <div class="tool-card">
+                    <h3>SQL Injection Tester</h3>
+                    <p>Database security testing</p>
+                    <button class="btn btn-primary">Launch Tool</button>
+                </div>
+                <div class="tool-card">
+                    <h3>Report Generator</h3>
+                    <p>Generate professional security reports</p>
+                    <button class="btn btn-primary">Launch Tool</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Details Modal -->
+        <div id="test-modal" class="form-modal hidden">
+            <div class="modal-content">
+                <h3>Start Penetration Test</h3>
+                <div id="target-details">
+                    <!-- Target details will be populated here -->
+                </div>
+                <form id="start-test-form">
+                    <textarea name="testPlan" placeholder="Describe your testing approach and methodology" rows="4" required></textarea>
+                    <input type="number" name="estimatedHours" placeholder="Estimated hours" min="1" max="168" required>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Start Test</button>
+                        <button type="button" onclick="hideTestModal()" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="researcher-dashboard.js"></script>
+</body>
+</html>
